@@ -42,4 +42,9 @@
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="1.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>
