@@ -17,14 +17,11 @@ namespace NestChecksAndBalances.Repositories
     public class UserRepository : IUserRepository
     {
         private readonly IDynamoDBContext _dbContext;
-        private readonly IAmazonDynamoDB _dynamo;
         private readonly DynamoDBOperationConfig _ddboc = new DynamoDBOperationConfig();
-        private readonly ILogger _logger;
 
-        public UserRepository(ILogger<UserRepository> logger, IAmazonDynamoDB dynamo)
+        public UserRepository(IAmazonDynamoDB dynamo)
         {
             _dbContext = new DynamoDBContext(dynamo);
-            _logger = logger;
         }
 
         public void SaveUser(CabUser xuUser)

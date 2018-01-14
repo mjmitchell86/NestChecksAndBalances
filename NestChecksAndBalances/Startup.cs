@@ -10,8 +10,6 @@ namespace NestChecksAndBalances
 {
     public class Startup
     {
-        public const string AppS3BucketKey = "AppS3Bucket";
-
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
@@ -32,6 +30,7 @@ namespace NestChecksAndBalances
 
             //Data Access Injection            
             services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<ICabLogRepository, CabLogRepository>();
 
             //Integration Injection
             services.AddAWSService<Amazon.S3.IAmazonS3>();
