@@ -1,67 +1,107 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
   "Transform" : "AWS::Serverless-2016-10-31",
-  "Description" : "An AWS Serverless Application that uses the ASP.NET Core framework running in Amazon Lambda.",
-
-  "Parameters" : {
-    "ShouldCreateBucket" : {
-      "Type" : "String",        
-      "AllowedValues" : ["true", "false"],
-      "Description" : "If true then the S3 bucket that will be proxied will be created with the CloudFormation stack."
-    },  
-    "BucketName" : {
-        "Type" : "String",
-        "Description" : "Name of S3 bucket that will be proxied. If left blank a new table will be created.",
-        "MinLength" : "0"
-    }
+  "Description" : "Serverless(SAM) .Net Core Web API to take in remote room temperature to adjust a Nest's targeted temperature.",
+    "Parameters" : {   
   },
-
-  "Conditions" : {
-    "CreateS3Bucket" : {"Fn::Equals" : [{"Ref" : "ShouldCreateBucket"}, "true"]},
-    "BucketNameGenerated" : {"Fn::Equals" : [{"Ref" : "BucketName"}, ""]}
+  "Conditions" : {  
   },
-
   "Resources" : {
-
-    "Get" : {
+    "NestChecksAndBalances" : {
       "Type" : "AWS::Serverless::Function",
       "Properties": {
         "Handler": "NestChecksAndBalances::NestChecksAndBalances.LambdaEntryPoint::FunctionHandlerAsync",
         "Runtime": "dotnetcore1.0",
         "CodeUri": "",
         "MemorySize": 256,
-        "Timeout": 30,
-        "Role": null,
-        "Policies": [ "AWSLambdaFullAccess" ],
-        "Environment" : {
-          "Variables" : {
-            "AppS3Bucket" : { "Fn::If" : ["CreateS3Bucket", {"Ref":"Bucket"}, { "Ref" : "BucketName" } ] }
-          }
-        },
+        "Timeout": 30,        
+        "Role": null, 
+		"FunctionName" : "NestChecksAndBalances",
+        "Policies": [ "AWSLambdaFullAccess" ],     
         "Events": {
           "PutResource": {
             "Type": "Api",
             "Properties": {
-              "Path": "/{proxy+}",
+              "Path": "/api/{proxy+}",
               "Method": "ANY"
             }
           }
         }
       }
     },
-
-    "Bucket" : {
-        "Type" : "AWS::S3::Bucket",
-        "Condition" : "CreateS3Bucket",
-        "Properties" : {
-            "BucketName" : { "Fn::If" : ["BucketNameGenerated", {"Ref" : "AWS::NoValue" }, { "Ref" : "BucketName" } ] }
-        }
-    }
+	"CABUser" : {
+	"Type" : "AWS::DynamoDB::Table",
+	"Properties" : {
+		"AttributeDefinitions" : [
+		{
+		"AttributeName" : "UserId",
+		"AttributeType" : "S"
+		},
+		{
+		"AttributeName" : "IsActive",
+		"AttributeType" : "N"
+		}
+		],
+		"KeySchema" : [
+		{
+		"AttributeName" : "UserId",
+		"KeyType" : "HASH"
+		}
+		],
+		"ProvisionedThroughput" : {
+		"ReadCapacityUnits" : "5",
+		"WriteCapacityUnits" : "2"
+		},
+        "TableName" : "CABUser",
+        "GlobalSecondaryIndexes" : [
+		{"IndexName" : "IsActive_IDX",
+        "KeySchema" : [
+		{
+		"AttributeName" : "IsActive",
+		"KeyType" : "HASH"
+		}
+		],
+        "Projection" : {
+		"ProjectionType" : "ALL"
+		},
+        "ProvisionedThroughput" : {
+		"ReadCapacityUnits" : "5",
+		"WriteCapacityUnits" : "2"
+		}
+		}
+		]
+	}
+	},
+	"CABLog" : {
+	"Type" : "AWS::DynamoDB::Table",
+	"Properties" : {
+		"AttributeDefinitions" : [
+		{
+		"AttributeName" : "UserId",
+		"AttributeType" : "S"
+		},
+		{
+		"AttributeName" : "LogType",
+		"AttributeType" : "S"
+		}
+		],
+		"KeySchema" : [
+		{
+		"AttributeName" : "UserId",
+		"KeyType" : "HASH"
+		},
+		{
+		"AttributeName" : "LogType",
+		"KeyType" : "RANGE"
+		}
+		],
+		"ProvisionedThroughput" : {
+		"ReadCapacityUnits" : "5",
+		"WriteCapacityUnits" : "2"
+		},
+        "TableName" : "CABLog"     
+		}
+	}  
   },
-
-  "Outputs" : {
-    "S3ProxyBucket" : {
-        "Value" : { "Fn::If" : ["CreateS3Bucket", {"Ref":"Bucket"}, { "Ref" : "BucketName" } ] }
-    }
-  }
+  "Outputs" : { }
 }

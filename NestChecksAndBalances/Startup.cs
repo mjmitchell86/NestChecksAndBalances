@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NestChecksAndBalances.Repositories;
+using NestChecksAndBalances.Services;
 
 namespace NestChecksAndBalances
 {
@@ -25,11 +27,18 @@ namespace NestChecksAndBalances
         
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
-            
-            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
-            
+            //Services Injection
+            services.AddTransient<IUserService, UserService>();
+
+            //Data Access Injection            
+            services.AddTransient<IUserRepository, UserRepository>();
+
+            //Integration Injection
             services.AddAWSService<Amazon.S3.IAmazonS3>();
+            services.AddAWSService<Amazon.DynamoDBv2.IAmazonDynamoDB>();
+
+            services.AddMvc();
+            services.AddDefaultAWSOptions(Configuration.GetAWSOptions());
         }
         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)

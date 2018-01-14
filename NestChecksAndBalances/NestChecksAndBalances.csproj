@@ -17,6 +17,8 @@
   
   <ItemGroup>
 
+    <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.3.5" />
+
     <PackageReference Include="Microsoft.AspNetCore.Server.IISIntegration" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="1.0.1" />
 
@@ -40,11 +42,6 @@
 
   <ItemGroup>
     <DotNetCliToolReference Include="Amazon.Lambda.Tools" Version="1.9.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-    <Folder Include="Services\" />
   </ItemGroup>
 
 </Project>
