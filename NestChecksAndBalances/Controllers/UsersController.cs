@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NestChecksAndBalances.Models;
 using NestChecksAndBalances.Services;
 
 namespace NestChecksAndBalances.Controllers
@@ -19,7 +20,7 @@ namespace NestChecksAndBalances.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return new OkObjectResult("OKIE DOKIE");
+            return new OkObjectResult(new CabUser("testToken", "thermId", 3, 5));
         }
         
         [HttpGet("{id}")]
