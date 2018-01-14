@@ -5,6 +5,7 @@
         UserCreated,
         UserDeleted,
         NestTemperatureSet,
-        IncomingTemperature
+        NestFanSet,
+        IncomingTemperature        
     }
 }

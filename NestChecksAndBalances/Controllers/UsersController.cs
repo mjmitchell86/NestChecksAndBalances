@@ -31,19 +31,38 @@ namespace NestChecksAndBalances.Controllers
                     return NotFound("No users found.");
                 }
 
-                return new OkObjectResult(_userService.ListUsers());
+                return new OkObjectResult(data);
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Retrieving CABUser List: " + ex.Message);
+                _logger.LogError("Error Retrieving CABUser List: " + ex);
                 return BadRequest("Error retrieving user list.  Please try again.");
             }
         }
 
         [HttpGet("{id}")]
-        public string Get(int id)
+        public IActionResult Get(string id)
         {
-            return "value";
+            if(!string.IsNullOrEmpty(id))
+            try
+            {
+                var data = _userService.GetUser(id);
+
+                if (data == null)
+                {
+                    return NotFound("User Not found.");
+                }
+
+                return new OkObjectResult(data);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error Retrieving CABUser ID: " + id + " -- Ex: " + ex);
+                return BadRequest("Error retrieving user.  Please try again.");
+            }
+
+            _logger.LogInformation("ID not passed in to User Get");
+            return BadRequest("Error: Please pass in an ID");
         }
 
         [HttpPost]
@@ -55,19 +74,9 @@ namespace NestChecksAndBalances.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError("Error Saving CABUser: " + ex.Message);
+                _logger.LogError("Error Saving CABUser: " + ex);
                 return BadRequest("Error Saving new user.  Please try again.");
             }
-        }
-
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        }       
     }
 }

@@ -9,7 +9,7 @@ namespace NestChecksAndBalances.Models
     public class CabLog
     {
         public string UserId { get; set; }
-        public LogAction LogType { get; set; }
+        public string LogType { get; set; }
         public string CreatedDate { get; set; }
         public int? Value { get; set; }
 
@@ -20,15 +20,15 @@ namespace NestChecksAndBalances.Models
 
         public CabLog(string userId, LogAction logType)
         {
-            UserId = UserId;
-            LogType = logType;
+            UserId = userId;
+            LogType = logType.ToString();
             CreatedDate = DateTime.Now.ToDynamoDbDateTime();
         }
 
         public CabLog(string userId, LogAction logType, int value)
         {
-            UserId = UserId;
-            LogType = logType;
+            UserId = userId;
+            LogType = logType.ToString();
             CreatedDate = DateTime.Now.ToDynamoDbDateTime();
             Value = value;
         }

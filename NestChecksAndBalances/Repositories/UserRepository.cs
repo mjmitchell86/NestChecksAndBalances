@@ -1,6 +1,5 @@
 ﻿using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DataModel;
-using Microsoft.Extensions.Logging;
 using NestChecksAndBalances.Models;
 using System;
 using System.Collections.Generic;
@@ -10,8 +9,9 @@ namespace NestChecksAndBalances.Repositories
 {
     public interface IUserRepository
     {
-        void SaveUser(CabUser xuUser);
+        void SaveUser(CabUser user);
         IEnumerable<CabUser> ListCabUsers();
+        CabUser GetUser(string userId);
     }
 
     public class UserRepository : IUserRepository
@@ -24,9 +24,9 @@ namespace NestChecksAndBalances.Repositories
             _dbContext = new DynamoDBContext(dynamo);
         }
 
-        public void SaveUser(CabUser xuUser)
+        public void SaveUser(CabUser user)
         {
-            _dbContext.SaveAsync(xuUser).Wait();
+            _dbContext.SaveAsync(user).Wait();
         }
 
         public CabUser GetUser(string userId)

@@ -9,6 +9,7 @@ namespace NestChecksAndBalances.Services
     {
         CabUser SaveUser(BaseCabUser baseUser);
         IEnumerable<CabUser> ListUsers();
+        CabUser GetUser(string userId);
     }
 
     public class UserService : IUserService
@@ -22,6 +23,11 @@ namespace NestChecksAndBalances.Services
             _cabLogRepository = cabLogRepository;
         }
 
+        public CabUser GetUser(string userId)
+        {
+            return _userRepository.GetUser(userId);
+        }
+
         public IEnumerable<CabUser> ListUsers()
         {
             return _userRepository.ListCabUsers();
@@ -29,10 +35,10 @@ namespace NestChecksAndBalances.Services
 
         public CabUser SaveUser(BaseCabUser baseUser)
         {
-            var xuUser = new CabUser(baseUser.NestToken, baseUser.ThermostatId, baseUser.RoomTargetTemperature, baseUser.CeilingSetTemperature, baseUser.UserName, baseUser.PhoneNumber);
-            _userRepository.SaveUser(xuUser);
-            _cabLogRepository.SaveLog(new CabLog(xuUser.UserId, LogAction.UserCreated));
-            return xuUser;
+            var user = new CabUser(baseUser.NestToken, baseUser.ThermostatId, baseUser.RoomTargetTemperature, baseUser.CeilingSetTemperature, baseUser.UserName, baseUser.PhoneNumber);
+            _userRepository.SaveUser(user);
+            _cabLogRepository.SaveLog(new CabLog(user.UserId, LogAction.UserCreated));
+            return user;
         }
     }
 }
