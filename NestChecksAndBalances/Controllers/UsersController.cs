@@ -30,8 +30,9 @@ namespace NestChecksAndBalances.Controllers
         }
         
         [HttpPost]
-        public void Post([FromBody]string value)
+        public IActionResult Post([FromBody]BaseCabUser cabUser)
         {
+            return new OkObjectResult(new CabUser(cabUser.NestToken, cabUser.ThermostatId,cabUser.RoomTargetTemperature, cabUser.CeilingSetTemperature));
         }
         
         [HttpPut("{id}")]

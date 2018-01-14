@@ -3,16 +3,13 @@ using System;
 
 namespace NestChecksAndBalances.Models
 {
-    public class CabUser
+    public class CabUser : BaseCabUser
     {
         public string UserId { get; set; }
-        public string NestToken { get; set; }
-        public string ThermostatId { get; set; }
         public bool IsActive { get; set; } = true;
         public bool IsEnabled { get; set; } = true;
-        public int RoomTargetTemperature { get; set; }
-        public int CeilingSetTemperature { get; set; }
         public string CreatedDate { get; set; }
+      
 
         public CabUser()
         {
@@ -28,5 +25,14 @@ namespace NestChecksAndBalances.Models
             CeilingSetTemperature = ceilingTemp;
             CreatedDate = DateTime.Now.ToDynamoDbDateTime();
         }
-    }  
+    }
+
+    public class BaseCabUser
+    {
+        public string NestToken { get; set; }
+        public string ThermostatId { get; set; }
+        public string UserName { get; set; }
+        public int RoomTargetTemperature { get; set; }
+        public int CeilingSetTemperature { get; set; }
+    }
 }
