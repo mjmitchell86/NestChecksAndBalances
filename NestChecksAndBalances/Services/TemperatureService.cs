@@ -31,14 +31,21 @@ namespace NestChecksAndBalances.Services
             _cabLogRepository.SaveLog(tempLog);
 
             //Find temperature information of house
+            var houseConditions = new NestObject();
             try
             {
-                var houseConditions = _nestAPI.GetCurrentHouseConditions(user.NestToken, user.ThermostatId);
+                houseConditions = _nestAPI.GetCurrentHouseConditions(user.NestToken, user.ThermostatId);
                 _logger.LogInformation("Current Nest House Ambient Temperature is: " + houseConditions.ambient_temperature_f);
             }
             catch (Exception ex)
             {
-                throw new Exception("Error Calling Nest API: " + ex.Message, ex);
+                throw new Exception("Error Calling Nest API to get current house conditions: " + ex.Message, ex);
+            }
+
+            //If Nest is Away, return
+            if(houseConditions.hvac_mode == "eco")
+            {
+                return tempLog;
             }
 
             //Check if there has been a NestSet created with this UserID in the past 20 minutes OR NestFan Log created with this UserID in the past 60 minutes.  If yes, just return tempLog

@@ -17,7 +17,7 @@ namespace NestChecksAndBalances.Models
 
         }
 
-        public CabUser(string nestToken, string thermostatId, int targetTemperature, int ceilingTemp, string name, string phone)
+        public CabUser(string nestToken, string sTToken, string thermostatId, int targetTemperature, int ceilingTemp, string name, string phone)
         {           
             UserId = Guid.NewGuid().ToString();
             NestToken = nestToken;
@@ -27,12 +27,14 @@ namespace NestChecksAndBalances.Models
             CreatedDate = DateTime.Now.ToDynamoDbDateTime();
             UserName = name;
             PhoneNumber = phone;
+            STToken = sTToken;
         }
     }
 
     public class BaseCabUser
     {
         public string NestToken { get; set; }
+        public string STToken { get; set; }
         public string ThermostatId { get; set; }
         public string UserName { get; set; }
         public int RoomTargetTemperature { get; set; }

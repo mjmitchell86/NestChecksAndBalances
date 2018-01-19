@@ -35,7 +35,7 @@ namespace NestChecksAndBalances.Services
 
         public CabUser SaveUser(BaseCabUser baseUser)
         {
-            var user = new CabUser(baseUser.NestToken, baseUser.ThermostatId, baseUser.RoomTargetTemperature, baseUser.CeilingSetTemperature, baseUser.UserName, baseUser.PhoneNumber);
+            var user = new CabUser(baseUser.NestToken, baseUser.STToken, baseUser.ThermostatId, baseUser.RoomTargetTemperature, baseUser.CeilingSetTemperature, baseUser.UserName, baseUser.PhoneNumber);
             _userRepository.SaveUser(user);
             _cabLogRepository.SaveLog(new CabLog(user.UserId, LogAction.UserCreated));
             return user;
